@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,7 +21,7 @@ public class StudentController {
     private CalculateResult calculateResult;
 
     @PostMapping(value = "/addStudent")
-    public Student addStudent(@RequestBody Student student) {
+    public Student addStudent(@RequestBody @Valid Student student) {
         Student studentSavedInDb = studentDao.save(calculateResult.calculateResult(student));
         log.info("Student saved to db {}", studentSavedInDb);
         return studentSavedInDb;
@@ -29,5 +30,10 @@ public class StudentController {
     @GetMapping(value = "/getAllStudent")
     public List<Student> getAllStudent() {
         return studentDao.findAll();
+    }
+
+    @ExceptionHandler
+    void handleException(Exception exception) {
+        log.error("exception raised {}", exception.getMessage());
     }
 }
