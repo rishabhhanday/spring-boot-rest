@@ -1,5 +1,6 @@
 package com.practice.model;
 
+import com.practice.validation.ValidEnum;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -19,4 +20,7 @@ public class Student {
     @Max(100)
     private int marks;
     private String result;
+    @NotNull
+    @ValidEnum
+    private School school;
 }

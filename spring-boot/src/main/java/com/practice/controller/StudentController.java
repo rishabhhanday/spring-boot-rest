@@ -33,7 +33,8 @@ public class StudentController {
     }
 
     @ExceptionHandler
-    void handleException(Exception exception) {
-        log.error("exception raised {}", exception.getMessage());
+    String handleException(Exception exception) {
+        log.error("exception raised {} \n exception {}", exception.getMessage(), exception.getClass());
+        return exception.getLocalizedMessage() + " \n " + exception.getClass();
     }
 }
