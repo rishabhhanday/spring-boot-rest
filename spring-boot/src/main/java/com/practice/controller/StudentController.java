@@ -19,6 +19,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
+/*
+   POST   /student/addstudent
+   GET    /student/{rollNo}
+   GET    /student/getResult
+   GET    /student/allStudent
+*/
+
 @RestController
 @RequestMapping(value = "/student")
 @Slf4j
@@ -31,12 +38,15 @@ public class StudentController {
 
   @PostMapping(value = "/addStudent")
   public StudentInfo addStudent(@RequestBody StudentInfo student) {
-    StudentInfo studentInfo = studentDao.save(student);
+    studentDao.save(student);
 
     return student.add(
-        linkTo(methodOn(StudentController.class).getAllStudent()).withSelfRel(),
+        linkTo(methodOn(StudentController.class).getAllStudent())
+            .withRel("get_all_student"),
         linkTo(methodOn(StudentController.class).getResult(student.getRollNo()))
-            .withRel("get result")
+            .withRel("get_result"),
+        linkTo(methodOn(StudentController.class).getStudentDetails(student.getRollNo()))
+            .withSelfRel()
     );
   }
 
@@ -56,9 +66,9 @@ public class StudentController {
   public List<StudentInfo> getAllStudent() {
     return studentDao.findAll().stream().map(student ->
         student.add(
-            linkTo(methodOn(StudentController.class).getAllStudent()).withSelfRel(),
             linkTo(methodOn(StudentController.class).getResult(student.getRollNo()))
-                .withRel("get result")
+                .withRel("get_result")
         )).collect(Collectors.toList());
+
   }
 }
